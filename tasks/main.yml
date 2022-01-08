@@ -1,0 +1,29 @@
+---
+# tasks file for kvm_provision_lab
+- name: Ensure requirements are in place
+  apt:
+    name:
+      - libguestfs-tools
+      - python3-libvirt
+    state: present
+  become: yes
+
+- name: Get VMs list
+  community.libvirt.virt:
+    command: list_vms
+  register: existing_vms
+  changed_when: no
+
+- name: Copy base image
+  copy:
+    dest: "{{ libvirt_pool_dir }}/{{ item.key }}.{{ item.value.file_type }}"
+    src: "{{ libvirt_pool_dir }}/{{ item.value.base_image_name }}.{{ item.value.file_type }}"
+    force: no
+    mode: 0660
+  register: copy_results
+  with_dict: "{{ guests }}"
+
+- name: Create VMs if not exist
+  include_tasks: create_vms.yml
+  when: "item.key not in existing_vms.list_vms"
+  with_dict: "{{ guests }}"

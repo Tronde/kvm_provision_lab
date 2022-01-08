@@ -1,0 +1,23 @@
+---
+- name: Configure the image
+  command: |
+    virt-customize -a {{ libvirt_pool_dir }}/{{ item.key }}.qcow2 \
+    --hostname {{ item.key }} \
+    --root-password password:{{ vm_root_pass }} \
+    --ssh-inject 'root:file:{{ ssh_key }}' \
+    --uninstall cloud-init --selinux-relabel
+#  when: copy_results is changed
+
+- name: Define VMs
+  community.libvirt.virt:
+    command: define
+    xml: "{{ lookup('template', '{{ item.value.vm_template }}.xml.j2') }}"
+
+- name: Ensure VMs are startet
+  community.libvirt.virt:
+    name: "{{ item.key }}"
+    state: running
+  register: vm_start_results
+  until: "vm_start_results is success"
+  retries: 15
+  delay: 2
