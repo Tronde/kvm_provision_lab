@@ -13,6 +13,22 @@
     command: define
     xml: "{{ lookup('template', '{{ item.value.vm_template }}.xml.j2') }}"
 
+- name: Create second disk images if needed
+  command: |
+    qemu-img create -f {{ item.value.file_type }} \
+    {{ libvirt_pool_dir }}/{{ item.key }}-vdb.{{ item.value.file_type }} {{ item.value.second_hdd_size }}
+  become: yes
+  when: item.value.second_hdd|bool == true
+
+- name : Attach second disk image to domain
+  command: |
+    virsh attach-disk {{ item.key }} \
+    --source "{{ libvirt_pool_dir }}/{{ item.key }}-vdb.{{ item.value.file_type }}" \
+    --target vdb \
+    --persistent
+  become: yes
+  when: item.value.second_hdd|bool == true
+
 - name: Ensure VMs are startet
   community.libvirt.virt:
     name: "{{ item.key }}"
