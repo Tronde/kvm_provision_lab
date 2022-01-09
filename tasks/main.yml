@@ -21,6 +21,7 @@
     force: no
     remote_src: yes
     mode: 0660
+    group: libvirt-qemu
   register: copy_results
   with_dict: "{{ guests }}"
 
