@@ -1,7 +1,7 @@
 ---
 libvirt_pool_dir: "/var/lib/libvirt/images"
 vm_root_pass: "123456"
-ssh_key: ""
+ssh_key: "/path/to/ssh-pub-key"
 
 guests:
   test:
@@ -18,9 +18,9 @@ guests:
     vm_ram_mb: 512
     vm_vcpus: 1
     vm_net: default
-    os_type: rhel7
+    os_type: rhel8
     file_type: qcow2
-    base_image_name: rhel7-template
-    vm_template: "rhel7-template"
+    base_image_name: rhel8-template
+    vm_template: "rhel8-template"
     second_hdd: true
     second_hdd_size: "100M"
