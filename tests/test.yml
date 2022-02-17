@@ -1,0 +1,9 @@
+---
+- name: Provision RHEL lab VMs
+  hosts: localhost
+  vars_files:
+    - roles/kvm_provision_lab/defaults/main.yml
+  tasks:
+    - name: Run role kvm_provision_lab
+      include_role:
+        name: kvm_provision_lab
