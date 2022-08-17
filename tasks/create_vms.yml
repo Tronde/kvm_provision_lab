@@ -20,7 +20,7 @@
   become: yes
   when: item.value.second_hdd|bool == true
 
-- name : Attach second disk image to domain
+- name: Attach second disk image to domain
   command: |
     virsh attach-disk {{ item.key }} \
     --source "{{ libvirt_pool_dir }}/{{ item.key }}-vdb.{{ item.value.file_type }}" \

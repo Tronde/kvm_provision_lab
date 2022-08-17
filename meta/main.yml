@@ -21,7 +21,7 @@ galaxy_info:
   galaxy_tags: 
     - kvm
     - lab
-    - linux_guests
+    - linuxguests
 
   dependencies:
     - community.libvirt.virt
