@@ -1,12 +1,16 @@
 ---
 # tasks file for kvm_provision_lab
-- name: Ensure requirements are in place
-  apt:
-    name:
-      - libguestfs-tools
-      - python3-libvirt
-    state: present
-  become: yes
+- name: Perform platform/version specific tasks
+  ansible.builtin.include_tasks: "{{ lookup('first_found', __rolename_ff_params) }}"
+  vars:
+    __rolename_ff_params:
+      files:
+        - "{{ ansible_facts['distribution'] }}_{{ 
+          ansible_facts['distribution_version'] }}.yml"
+        - "{{ ansible_facts['os_family'] }}.yml"
+      paths:
+        - "{{ role_path }}/tasks/setup"
+      skip: true
 
 - name: Get VMs list
   community.libvirt.virt:
@@ -15,17 +19,17 @@
   changed_when: no
 
 - name: Copy base image
-  copy:
+  ansible.builtin.copy:
     dest: "{{ libvirt_pool_dir }}/{{ item.key }}.{{ item.value.file_type }}"
     src: "{{ libvirt_pool_dir }}/{{ item.value.base_image_name }}.{{ item.value.file_type }}"
-    force: no
-    remote_src: yes
+    force: false
+    remote_src: true
     mode: 0660
-    group: libvirt-qemu
+      #    group: libvirt-qemu
   register: copy_results
   with_dict: "{{ guests }}"
 
 - name: Create VMs if not exist
-  include_tasks: create_vms.yml
+  ansible.builtin.include_tasks: create_vms.yml
   when: "item.key not in existing_vms.list_vms"
   with_dict: "{{ guests }}"

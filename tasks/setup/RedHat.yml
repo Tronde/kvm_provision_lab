@@ -1,0 +1,8 @@
+---
+- name: Ensure requirements are in place
+  ansible.builtin.dnf:
+    name:
+      - libguestfs
+      - python3-libvirt
+    state: present
+  become: yes

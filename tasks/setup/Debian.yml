@@ -1,0 +1,8 @@
+---
+- name: Ensure requirements are in place
+  apt:
+    name:
+      - libguestfs-tools
+      - python3-libvirt
+    state: present
+  become: yes
