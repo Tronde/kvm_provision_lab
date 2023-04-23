@@ -14,8 +14,8 @@
     xml: "{{ lookup('template', '{{ item.value.vm_template }}.xml.j2') }}"
 
 - name: Create second disk images if needed
-  command: |
-    qemu-img create -f {{ item.value.file_type }} \
+  command: |-
+    qemu-img create -q -f {{ item.value.file_type }} \
     {{ libvirt_pool_dir }}/{{ item.key }}-vdb.{{ item.value.file_type }} {{ item.value.second_hdd_size }}
   become: yes
   when: item.value.second_hdd|bool == true
