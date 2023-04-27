@@ -25,6 +25,7 @@
     virsh attach-disk {{ item.key }} \
     --source "{{ libvirt_pool_dir }}/{{ item.key }}-vdb.{{ item.value.file_type }}" \
     --target vdb \
+    --subdriver qcow2 \
     --persistent
   become: yes
   when: item.value.second_hdd|bool == true
