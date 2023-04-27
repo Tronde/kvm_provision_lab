@@ -1,16 +1,31 @@
 kvm_provision_lab
 =================
 
-With this role you can deploy a lab environment of Linux VMs to a KVM hypervisor.
+With this role you can deploy a lab environment of Linux VMs to a KVM/QEMU hypervisor.
+
+For the hypervisor host I have tested but other/newer releases might work too:
+
+ - Debian 11
+ - RHEL 9
+ - Fedora 37
+
+If you are capable of reading German you'll find a tutorial on my blog at: https://www.my-it-brain.de/wordpress/labor-umgebung-mit-ansible-in-kvm-erstellen/.
 
 Requirements
 ------------
 
 This role needs the community.libvirt.virt module on the Ansible Control Node and the commands virt-customize, qemu-img and virsh on the remote host.
 
+You can use the command `ansible-galaxy collection install community.libvirt` to install the collection to your Ansible Control Node. For the commands needed on the remote host, please use the package manager of your distribution to install them.
+
 Role Variables
 --------------
 
+The following code block shows the variables you can set. You need to specify the directory where the disk images for your guest domains are going to be created using `libvirt_pool_dir`. With `vm_root_pass` you set the password for the root user and add an ssh-key to the authorized_keys file by setting `ssh_key`.
+
+The VMs are defined as a dictionary as shown below.
+
+```
 libvirt_pool_dir: "/var/lib/libvirt/images"
 vm_root_pass: "123456"
 ssh_key: "/path/to/ssh-pub-key"
@@ -26,12 +41,24 @@ guests:
     vm_template: "rhel7-template"
     second_hdd: false
     second_hdd_size: ""
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+  test2:
+    vm_ram_mb: 512
+    vm_vcpus: 1
+    vm_net: default
+    os_type: rhel8
+    file_type: qcow2
+    base_image_name: rhel8-template
+    vm_template: "rhel8-template"
+    second_hdd: true
+    second_hdd_size: "100M"
+```
+
+With the varialbes from the code block above you would create the two VMs _test_ and _test2_ with the parameters specified in the dictionary.
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+- community.libvirt
 
 Example Playbook
 ----------------
@@ -41,6 +68,12 @@ Including an example of how to use your role (for instance, with variables passe
     - hosts: servers
       roles:
          - kvm_provision_lab
+
+Contribution
+------------
+
+In case you need additional information on how to use this role, please raise an issue with your question at: https://github.com/Tronde/kvm_provision_lab/issues
+Pull requests improving this README as well as the role are appreciated.
 
 License
 -------

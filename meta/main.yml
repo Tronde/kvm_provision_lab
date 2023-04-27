@@ -22,10 +22,14 @@ galaxy_info:
     versions:
       - 9
 
+  - name: Fedora
+    versions:
+      - 37
+
   galaxy_tags: 
     - kvm
     - lab
     - linuxguests
 
   dependencies:
-    - community.libvirt.virt
+    - community.libvirt
