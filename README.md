@@ -34,6 +34,7 @@ guests:
   test:
     vm_ram_mb: 512
     vm_vcpus: 1
+    vm_iftype: network
     vm_net: default
     os_type: rhel7
     file_type: qcow2
@@ -44,6 +45,7 @@ guests:
   test2:
     vm_ram_mb: 512
     vm_vcpus: 1
+    vm_iftype: network
     vm_net: default
     os_type: rhel8
     file_type: qcow2
@@ -53,7 +55,22 @@ guests:
     second_hdd_size: "100M"
 ```
 
-With the varialbes from the code block above you would create the two VMs _test_ and _test2_ with the parameters specified in the dictionary.
+With the varialbes from the code block above you would create the two VMs _test_ and _test2_ with the parameters specified in the dictionary. The variables are explained in the table below.
+
+| Variable | Description |
+| --- | --- |
+| `guests` | Name of the dictionary specifying the parameters for guest domains (VMs). |
+| `test` | This key is used as name for the domain (VM) to create. |
+| `vm_ram_mb` | Guest memory in MB. |
+| `vm_vcpus` | Count of vCPU for the domain. |
+| `vm_iftype` | Type of network to connect to. Possible vaules are `network` (default) or `bridge`. |
+| `vm_net` | Network Name. Must already exist in your environment. |
+| `os_type` | Type of the guest domain, e.g. `rhel8`, `rhel9` or `debian11`. |
+| `file_type` | Defaults to qcow2. You usually don't have to change this. |
+| `base_image_name` | The name of the qcow2 image that is used as the source to copy. |
+| `vm_template` | Name of the template without he .xml.j2 part. |
+| `second_hdd` | Boolean to specify whether a second disk image is needed or not. |
+| `second_hdd_size` | Size of the second disk image. Size can be specified in k or K (kilobyte, 1024) M (megabyte,  1024k) and G (gigabyte, 1024M) and T (terabyte, 1024G). |
 
 Dependencies
 ------------

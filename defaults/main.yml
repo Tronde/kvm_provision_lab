@@ -7,6 +7,7 @@ guests:
   test:
     vm_ram_mb: 512
     vm_vcpus: 1
+    vm_iftype: network
     vm_net: default
     os_type: rhel7
     file_type: qcow2
@@ -17,6 +18,7 @@ guests:
   test2:
     vm_ram_mb: 512
     vm_vcpus: 1
+    vm_iftype: network
     vm_net: default
     os_type: rhel8
     file_type: qcow2
